@@ -1,29 +1,25 @@
 {
   "name": "iaktta",
-  "version": "0.0.1",
-  "author": "sciolist.se@gmail.com",
+  "version": "0.0.2",
+  "author": "jdp",
   "license": "BSD-2-Clause",
   "repository": {
     "url": "https://github.com/sciolist/node-iaktta.git"
   },
-  "description": "",
+  "description": "state management",
   "main": "index.js",
   "scripts": {
     "build": "scripts/build",
     "pub": "scripts/publish"
   },
-  "optionalDependencies": {
-    "preact": ">= 8",
-    "react": ">= 16"
-  },
-  "peerDependencies": {
-    "preact": ">= 8",
-    "react": ">= 16"
-  },
   "devDependencies": {
+    "@types/react": "^16.8.10",
     "@types/rollup": "^0.54.0",
     "@types/typescript": "^2.0.0",
+    "preact": ">= 8",
+    "react": ">= 16",
     "rollup": "^1.7.4",
+    "rollup-plugin-dts": "^0.14.0",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-typescript": "^1.0.1",
     "ts-node": "^8.0.3",

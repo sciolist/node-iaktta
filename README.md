@@ -30,9 +30,12 @@ render(<Counter />, document.body);
 
 ```
 $ sh scripts/get-size
-  "version": "0.0.1",
-    2972 bytes minifed, using preact version
-     997 bytes gzipped, using preact version
+  "version": "0.0.2",
+
+standard build + preact helper:
+    5337 bytes unminified
+    2084 bytes minifed
+     862 bytes gzipped
 ``` 
 
 ## Public functions

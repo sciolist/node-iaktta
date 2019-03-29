@@ -1,6 +1,15 @@
-npm run build >/dev/null 2>/dev/null
+#!/bin/sh
+set -ue
 cat package.json | grep "version"
+echo ""
+
+MINIFY=1 npm run build >/dev/null 2>/dev/null
 min_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
 gz_size=$(cat dist/*.js dist/helpers/preact.js | gzip | wc -c)
-echo "$min_size bytes minifed, using preact version"
-echo "$gz_size bytes gzipped, using preact version"
+npm run build >/dev/null 2>/dev/null
+full_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
+
+echo "standard build + preact helper:"
+echo "$full_size bytes unminified"
+echo "$min_size bytes minifed"
+echo "$gz_size bytes gzipped"
