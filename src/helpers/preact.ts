@@ -4,7 +4,7 @@ import { clearObserver, observe } from '../observer';
 const observers = new WeakMap();
 
 // binds a preact component class to any observables it uses during rendering
-export function observer<RV extends (() => any) | (new() => any)>(component: RV): typeof Component {
+export function observer<RV extends (() => any) | (new() => any)>(component: RV): RV {
   // wrap single file components
   const sfc = !(component.prototype instanceof Component);
   let cls = sfc ? Component : component;

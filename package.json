@@ -1,6 +1,6 @@
 {
   "name": "iaktta",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "iaktta.js",
   "scripts": {
     "build": "scripts/build",
