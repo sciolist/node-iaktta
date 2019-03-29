@@ -21,7 +21,6 @@ export default [
   {
     output: [
       { dir: 'dist', format: 'cjs', entryFileNames: '[name].js' },
-      { dir: 'dist', format: 'es', entryFileNames: '[name].mjs' },
     ],
     input: files.reduce((a, b) => {
       a[b] = `./src/${b}.ts`;

@@ -6,20 +6,12 @@ echo ""
 MINIFY=1 npm run build >/dev/null 2>/dev/null
 cjs_min_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
 cjs_gz_size=$(cat dist/*.js dist/helpers/preact.js | gzip | wc -c)
-esm_min_size=$(cat dist/*.mjs dist/helpers/preact.mjs | wc -c)
-esm_gz_size=$(cat dist/*.mjs dist/helpers/preact.mjs | gzip | wc -c)
 
 MINIFY=0 npm run build >/dev/null 2>/dev/null
 cjs_full_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
-esm_full_size=$(cat dist/*.mjs dist/helpers/preact.mjs | wc -c)
 
 echo "cjs + preact helper:"
 echo "$cjs_full_size bytes unminified"
 echo "$cjs_min_size bytes minifed"
 echo "$cjs_gz_size bytes gzipped"
-echo ""
-echo "es modules + preact helper:"
-echo "$esm_full_size bytes unminified"
-echo "$esm_min_size bytes minifed"
-echo "$esm_gz_size bytes gzipped"
 echo ""

@@ -1,9 +1,7 @@
 {
   "name": "iaktta",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "iaktta.js",
-  "jsnext:main": "iaktta.mjs",
-  "module": "iaktta.mjs",
   "scripts": {
     "build": "scripts/build",
     "pub": "scripts/publish"
