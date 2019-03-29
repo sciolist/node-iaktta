@@ -2,30 +2,32 @@ import { terser } from 'rollup-plugin-terser';
 import { ts, dts } from "rollup-plugin-dts";
 
 const files = [
-  'index',
+  'iaktta',
   'helpers/preact',
   'helpers/react',
   'helpers/autorun'
 ]
 
+const minifier = process.env.MINIFY && terser({
+  compress: {
+    pure_getters: true,
+    module: true
+  },
+  module: true,
+  toplevel: true
+});
+
 export default [
   {
-    output: { dir: 'dist', format: 'cjs' },
+    output: [
+      { dir: 'dist', format: 'cjs', entryFileNames: '[name].js' },
+      { dir: 'dist', format: 'es', entryFileNames: '[name].mjs' },
+    ],
     input: files.reduce((a, b) => {
       a[b] = `./src/${b}.ts`;
       return a;
     }, {}),
-    plugins: [ 
-      ts(),
-      process.env.MINIFY && terser({
-        compress: {
-          pure_getters: true,
-          module: true
-        },
-        module: true,
-        toplevel: true
-      }),
-    ].filter(v => v),
+    plugins: [ minifier, ts() ].filter(v => v),
     external: ['preact', 'react']
   },
   ...files.map(f => ({

@@ -27,9 +27,7 @@ export function observer<RV extends (() => any) | (new() => any)>(componentClass
     proto.render = function observing_render() {
       clearObserver(this[reactObserverSym]);
       if (this[reactObserverSym] === undefined) {
-        this[reactObserverSym] = () => {
-          this.setState();
-        }
+        this[reactObserverSym] = () => this.forceUpdate();
       }
       return observe(this[reactObserverSym], oldRender);
     };

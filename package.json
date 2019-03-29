@@ -1,13 +1,8 @@
 {
   "name": "iaktta",
-  "version": "0.0.2",
-  "author": "jdp",
-  "license": "BSD-2-Clause",
-  "repository": {
-    "url": "https://github.com/sciolist/node-iaktta.git"
-  },
-  "description": "state management",
-  "main": "index.js",
+  "version": "0.0.4",
+  "main": "iaktta.js",
+  "jsnext:main": "iaktta.mjs",
   "scripts": {
     "build": "scripts/build",
     "pub": "scripts/publish"
@@ -25,5 +20,11 @@
     "ts-node": "^8.0.3",
     "tslib": "^1.9.3",
     "typescript": "3.3.4000"
-  }
+  },
+  "author": "jdp",
+  "license": "BSD-2-Clause",
+  "repository": {
+    "url": "https://github.com/sciolist/node-iaktta.git"
+  },
+  "description": "state management"
 }
