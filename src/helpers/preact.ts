@@ -20,7 +20,7 @@ export function observer<RV extends (() => any) | (new() => any)>(component: RV)
       if (!observers.has(this)) {
         observers.set(this, () => this.setState());
       }
-      return observe(observers.get(this), oldRender);
+      return observe(observers.get(this), oldRender.bind(this, arguments));
     }
   } as any;
 }
