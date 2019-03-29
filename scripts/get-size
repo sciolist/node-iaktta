@@ -8,7 +8,8 @@ cjs_min_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
 cjs_gz_size=$(cat dist/*.js dist/helpers/preact.js | gzip | wc -c)
 esm_min_size=$(cat dist/*.mjs dist/helpers/preact.mjs | wc -c)
 esm_gz_size=$(cat dist/*.mjs dist/helpers/preact.mjs | gzip | wc -c)
-npm run build >/dev/null 2>/dev/null
+
+MINIFY=0 npm run build >/dev/null 2>/dev/null
 cjs_full_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
 esm_full_size=$(cat dist/*.mjs dist/helpers/preact.mjs | wc -c)
 
