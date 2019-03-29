@@ -1,10 +1,11 @@
 {
   "name": "iaktta",
-  "version": "0.0.9",
+  "private": true,
+  "version": "0.0.10",
   "main": "iaktta.js",
   "scripts": {
-    "build": "scripts/build",
-    "pub": "scripts/publish"
+    "build": "bash scripts/build",
+    "pub": "bash scripts/publish"
   },
   "devDependencies": {
     "@types/react": "^16.8.10",

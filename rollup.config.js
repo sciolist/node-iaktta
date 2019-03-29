@@ -1,13 +1,6 @@
 import { terser } from 'rollup-plugin-terser';
 import { ts, dts } from "rollup-plugin-dts";
 
-const files = [
-  'iaktta',
-  'helpers/preact',
-  'helpers/react',
-  'helpers/autorun'
-]
-
 const minifier = process.env.MINIFY && terser({
   compress: {
     pure_getters: true,
@@ -17,22 +10,24 @@ const minifier = process.env.MINIFY && terser({
   toplevel: true
 });
 
+export function createConfiguration(name) {
+  return [
+    {
+      output: { file: `./dist/${name}/iaktta.js`, format: 'cjs' },
+      input: `./src/iaktta.${name}.ts`,
+      plugins: [ minifier, ts(), minifier ].filter(v => v),
+      external: [name]
+    },
+    {
+      output: { file: `./dist/${name}/iaktta.d.ts`, format: 'es' },
+      input: `./src/iaktta.${name}.ts`,
+      plugins: [dts()],
+      external: [name]
+    }
+  ];
+}
+
 export default [
-  {
-    output: [
-      { dir: 'dist', format: 'cjs', entryFileNames: '[name].js' },
-    ],
-    input: files.reduce((a, b) => {
-      a[b] = `./src/${b}.ts`;
-      return a;
-    }, {}),
-    plugins: [ minifier, ts() ].filter(v => v),
-    external: ['preact', 'react']
-  },
-  ...files.map(f => ({
-    output: { file: `./dist/${f}.d.ts`, format: 'es' },
-    input: `./src/${f}.ts`,
-    plugins: [dts()],
-    external: ['preact', 'react']
-  }))
+  ...createConfiguration('preact'),
+  ...createConfiguration('react')
 ]

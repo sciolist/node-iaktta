@@ -1,0 +1,15 @@
+{
+    "name": "iaktta.react",
+    "version": "0.0.10",
+    "main": "iaktta.js",
+    "peerDependencies": {
+      "react": ">= 16"
+    },
+    "author": "jdp",
+    "license": "BSD-2-Clause",
+    "repository": {
+      "url": "https://github.com/sciolist/node-iaktta.git"
+    },
+    "description": "state management"
+  }
+  

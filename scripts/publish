@@ -2,5 +2,13 @@
 set -ue
 
 npm run build
-cd dist
-npm publish
+
+(
+    cd dist/preact
+    npm publish
+)
+
+(
+    cd dist/react
+    npm publish
+)
