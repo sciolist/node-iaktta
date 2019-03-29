@@ -6,12 +6,12 @@ const hasOwnProperty = (o: any, key: string) => Object.prototype.hasOwnProperty.
 const observableProperties = new WeakMap();
 const observableCache = new WeakMap<any, any>();
 
-export const observable: observable = (Class, key, desc) => {
-  if (arguments.length === 3) {
+export const observable: IObservable = ((Class: any, key: any, desc: any) => {
+  if (key !== undefined) {
     return observableProperty(Class, key, desc);
   }
   return observableObject(Class);
-};
+}) as any;
 
 function observableObject<T extends object>(object: T): T {
   if (!observableCache.has(object)) {
@@ -65,4 +65,7 @@ function setProxyValue(target: object, key: string | symbol, value: any) {
   return true;
 }
 
-type observable = (<T extends object>(object: T) => T) | ((Class, key, desc) => any);
+interface IObservable {
+  <T extends object>(value: T): T;
+  (target: object, key: string | symbol, descriptor?: PropertyDescriptor): any;
+}

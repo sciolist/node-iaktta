@@ -1,6 +1,6 @@
 {
     "name": "iaktta.react",
-    "version": "0.0.10",
+    "version": "0.0.11",
     "main": "iaktta.js",
     "peerDependencies": {
       "react": ">= 16"
