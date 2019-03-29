@@ -1,0 +1,6 @@
+#!/bin/sh
+set -ue
+
+npm run build
+cd dist
+npm publish

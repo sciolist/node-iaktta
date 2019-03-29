@@ -1,0 +1,6 @@
+npm run build >/dev/null 2>/dev/null
+cat package.json | grep "version"
+min_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
+gz_size=$(cat dist/*.js dist/helpers/preact.js | gzip | wc -c)
+echo "$min_size bytes minifed, using preact version"
+echo "$gz_size bytes gzipped, using preact version"

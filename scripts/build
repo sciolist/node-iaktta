@@ -1,0 +1,7 @@
+#!/bin/sh
+set -ue
+
+rm -rf "./dist"
+rollup -c rollup.config.js
+tsc --emitDeclarationOnly --outDir "dist"
+cp package.json dist
