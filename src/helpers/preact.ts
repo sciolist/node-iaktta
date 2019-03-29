@@ -1,36 +1,26 @@
 import { Component } from 'preact';
 import { clearObserver, observe } from '../observer';
 
+const observers = new WeakMap();
+
 // binds a preact component class to any observables it uses during rendering
-const reactObserverSym = Symbol("observer");
-export function observer<RV extends (() => any) | (new() => any)>(componentClass: RV): RV {
+export function observer<RV extends (() => any) | (new() => any)>(component: RV): typeof Component {
   // wrap single file components
-  let Class = componentClass as any;
-  if (!(Class.prototype instanceof Component)) {
-    Class = class ObservingSFC extends Component {
-      render() { return (componentClass as any)(); }
+  const sfc = !(component.prototype instanceof Component);
+  let cls = sfc ? Component : component;
+  return class ObserverWrapper extends (cls as any) {
+    displayName = cls.name + '+iaktta';
+    componentWillUnmount() {
+      super.componentWillUnmount();
+      clearObserver(observers.get(this));
+      observers.delete(this);
     }
-  }
-
-  const proto = (Class as any).prototype;
-  const oldCWU = proto.componentWillUnmount;
-  const oldRender = proto.render.bind(this);
-
-  proto.componentWillUnmount = function observing_componentWillUnmount() {
-    clearObserver(this[reactObserverSym]);
-    if (oldCWU) {
-      oldCWU.apply(this, arguments);
-    }
-  };
-
-  if (proto.render) {
-    proto.render = function observing_render() {
-      clearObserver(this[reactObserverSym]);
-      if (this[reactObserverSym] === undefined) {
-        this[reactObserverSym] = () => this.setState();
+    render() {
+      const oldRender = sfc ? component : super.render;
+      if (!observers.has(this)) {
+        observers.set(this, () => this.setState());
       }
-      return observe(this[reactObserverSym], oldRender);
-    };
-  }
-  return Class;
+      return observe(observers.get(this), oldRender);
+    }
+  } as any;
 }

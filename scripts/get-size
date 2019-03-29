@@ -7,7 +7,7 @@ MINIFY=1 npm run build >/dev/null 2>/dev/null
 cjs_min_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
 cjs_gz_size=$(cat dist/*.js dist/helpers/preact.js | gzip | wc -c)
 
-MINIFY=0 npm run build >/dev/null 2>/dev/null
+npm run build >/dev/null 2>/dev/null
 cjs_full_size=$(cat dist/*.js dist/helpers/preact.js | wc -c)
 
 echo "cjs + preact helper:"
