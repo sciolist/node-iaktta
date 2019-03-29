@@ -7,7 +7,7 @@ import { observable } from './proxy';
 const observers = new WeakMap();
 
 // binds a preact component class to any observables it uses during rendering
-function observer<RV extends (() => any) | (new() => any)>(component: RV): RV {
+function observer<RV extends { name?: string, prototype: any }>(component: RV): RV {
     // wrap single file components
     const sfc = !(component.prototype instanceof Component);
     let cls = sfc ? Component : component;
