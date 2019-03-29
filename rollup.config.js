@@ -32,6 +32,7 @@ export default [
   ...files.map(f => ({
     output: { file: `./dist/${f}.d.ts`, format: 'es' },
     input: `./src/${f}.ts`,
-    plugins: [dts()]
+    plugins: [dts()],
+    external: ['preact', 'react']
   }))
 ]
