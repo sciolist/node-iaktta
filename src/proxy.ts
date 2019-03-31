@@ -1,4 +1,4 @@
-import { addObservation, notifyObservers } from "./observer";
+import { addObservation, notifyObservers, activeObserver } from './observer';
 import { getMutationHelper } from "./mutation-triggers";
 
 const hasOwnProperty = (o: any, key: string) => Object.prototype.hasOwnProperty.call(o, key);
@@ -46,7 +46,9 @@ function getProxyValue(target: object, key: string | symbol) {
   if (typeof key === "symbol" || hasOwnProperty(Object.prototype, key)) {
     return value;
   }
-  addObservation(target, key);
+  if (activeObserver !== null) {
+    addObservation(target, key);
+  }
   if (!(value instanceof Object)) {
     return value;
   }

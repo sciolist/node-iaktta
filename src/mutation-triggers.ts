@@ -1,4 +1,4 @@
-import { addObservation, notifyObservers } from "./observer";
+import { notifyObservers, activeObserver, addObservation } from './observer';
 
 // Some built-in JS objects mutate themselves in ways we cannot track.
 // So we need to hack in observations on these.
@@ -18,7 +18,9 @@ export function getMutationHelper(target: object, value: any) {
 }
 
 function mutatingFunction(target: object, func: Function, mutatingKey: string) {
-  addObservation(target, mutatingKey);
+  if (activeObserver !== null) {
+    addObservation(target, mutatingKey);
+  }
   return function() {
     const before = target[mutatingKey];
     try {

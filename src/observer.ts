@@ -1,7 +1,7 @@
 
 type Observer = () => void;
 
-let activeObserver: Observer | null = null;
+export let activeObserver: Observer | null = null;
 const proxyObjectObservers = new WeakMap<any, { [key: string]: Set<Observer> }>();
 const observerObservations = new WeakMap<Observer, Set<Set<Observer>>>();
 
