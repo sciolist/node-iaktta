@@ -52,7 +52,9 @@ export function notifyObservers(target: object, key: string) {
   if (observations !== undefined && observations[key] !== undefined) {
     const values = observations[key];
     for (const observer of values) {
-      observer();
+      if (activeObserver !== observer) {
+        observer();
+      }
     }
   }
 }
