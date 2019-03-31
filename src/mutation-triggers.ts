@@ -19,7 +19,7 @@ export function getMutationHelper(target: object, value: any) {
 
 function mutatingFunction(target: object, func: Function, mutatingKey: string) {
   if (activeObserver !== null) {
-    addObservation(target, mutatingKey);
+    addObservation(activeObserver, target, mutatingKey);
   }
   return function() {
     const before = target[mutatingKey];

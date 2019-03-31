@@ -47,7 +47,7 @@ function getProxyValue(target: object, key: string | symbol) {
     return value;
   }
   if (activeObserver !== null) {
-    addObservation(target, key);
+    addObservation(activeObserver, target, key);
   }
   if (!(value instanceof Object)) {
     return value;

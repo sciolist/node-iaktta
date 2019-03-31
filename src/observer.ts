@@ -24,8 +24,8 @@ export function clearObserver(observer: Observer) {
   }
 }
 
-export function addObservation(target: object, key: string) {
-  if (activeObserver === null) {
+export function addObservation(observer: Observer, target: object, key: string) {
+  if (observer === null) {
     return;
   }
   let targetObservations = proxyObjectObservers.get(target);
@@ -38,12 +38,12 @@ export function addObservation(target: object, key: string) {
     keyObservations = new Set();
     targetObservations[key] = keyObservations;
   }
-  let observe = observerObservations.get(activeObserver);
+  let observe = observerObservations.get(observer);
   if (observe === undefined) {
     observe = new Set();
-    observerObservations.set(activeObserver, observe);
+    observerObservations.set(observer, observe);
   }
-  keyObservations.add(activeObserver);
+  keyObservations.add(observer);
   observe.add(keyObservations);
 }
 
