@@ -1,5 +1,5 @@
 import { addObservation, notifyObservers, activeObserver } from './observer';
-import { getMutationHelper } from "./mutation-triggers";
+import { getMutationHelper } from './mutation-triggers';
 
 const hasOwnProperty = (o: any, key: string) => Object.prototype.hasOwnProperty.call(o, key);
 
@@ -24,17 +24,17 @@ function observableObject<T extends object>(object: T): T {
 function observableProperty(Class, key, desc) {
   const getObservable = t => observableProperties.get(t) || observableProperties.set(t, observableObject({})).get(t);
   return {
-      get() {
-          const o = getObservable(this);
-          if (!(key in o) && desc.initializer) {
-              o[key] = desc.initializer();
-          }
-          return o[key];
-      },
-      set(value) {
-          return getObservable(this)[key] = value;
+    get() {
+      const o = getObservable(this);
+      if (!(key in o) && desc.initializer) {
+        o[key] = desc.initializer();
       }
-  }
+      return o[key];
+    },
+    set(value) {
+      return (getObservable(this)[key] = value);
+    }
+  };
 }
 
 function getProxyValue(target: object, key: string | symbol) {
@@ -43,7 +43,7 @@ function getProxyValue(target: object, key: string | symbol) {
   if (mutationHelper !== undefined) {
     return mutationHelper;
   }
-  if (typeof key === "symbol" || hasOwnProperty(Object.prototype, key)) {
+  if (typeof key === 'symbol' || hasOwnProperty(Object.prototype, key)) {
     return value;
   }
   if (activeObserver !== null) {
@@ -61,7 +61,7 @@ function setProxyValue(target: object, key: string | symbol, value: any) {
   if (before === value) {
     return true;
   }
-  if (typeof key !== "symbol" && !hasOwnProperty(Object.prototype, key)) {
+  if (typeof key !== 'symbol' && !hasOwnProperty(Object.prototype, key)) {
     notifyObservers(target, key);
   }
   return true;

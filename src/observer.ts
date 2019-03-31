@@ -1,4 +1,3 @@
-
 type Observer = () => void;
 
 export let activeObserver: Observer | null = null;
