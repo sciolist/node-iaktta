@@ -7,14 +7,14 @@ export function getMutationHelper(target: object, value: any) {
   if (!(value instanceof Function)) {
     return;
   }
+  let key = 'size';
   if (target instanceof Map || target instanceof Set) {
-    const key = 'size';
-    return mutatingFunction(target, value, key);
+  } else if (target instanceof Array) {
+    key = 'length';
+  } else {
+    return;
   }
-  if (target instanceof Array) {
-    const key = 'length';
-    return mutatingFunction(target, value, key);
-  }
+  return mutatingFunction(target, value, key);
 }
 
 function mutatingFunction(target: object, func: Function, mutatingKey: string) {
