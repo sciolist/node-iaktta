@@ -1,4 +1,4 @@
-# Iaktta
+# iaktta
 
 Basic state container that I use for some lightweight projects.
 
@@ -53,91 +53,46 @@ cjs preact build:
 
 #### observable
 
-The `observable` function creates a new proxy for any object you pass in.
+The `observable` function creates a new observable object.
 
-Whenever a property on this proxy is accessed or modified, it will trigger an update to any observers listening to that property.
-
-#### observe
-
-The `observe` function binds an observer to observable values:
+When a property of this object is accessed or modified, its observers are notified.
 
 ```js
-import { observe } from 'iaktta.preact'
+import { observable } from 'iaktta.preact'; // or iaktta.react
 
-observe(observer, () => {
-    // while this function is running, any observable values used are bound to `observer`:
-    return h('div', null, model.name);
-});
+const model = observable({ counter: 0 });
+const inc = () => model.counter ++;
 
-function observer() {
-    // this function will be called by the observable proxies when a property
-    // that has was accessed during 'observe' is modified.
+// also works with decorator syntax for class properties
+class Model {
+  @observable counter = 0;
+  inc: () => { this.counter++; }
 }
 ```
 
-### clearObserver
+### observer
 
-If you don't want to receive any further updates to your observer, this will clear them.
-
-```js
-import { clearObserver } from 'iaktta.preact'
-
-// when you are finished with the observer you can clear all listeners
-clearObserver(observer);
-```
-
-## Helpers
-
-### Preact
-
-There's a preact `observer` function that automatically rerenders a component
-whenever a value used during rendering changes. 
+`observer` will automatically rerender a component when an observable changes.
 
 ```js
-import { observable, observer } from 'iaktta.preact';
+import { observable, observer } from 'iaktta.preact'; // or iaktta.react
 import { render, h, Component } from 'preact';
 
 const model = observable({ counter: 0 });
-const updateCounter = () => model.counter ++;
+const inc = () => model.counter ++;
 
-const Example = observer(() => {
-    <div onClick={updateCounter}>{model.counter}</div>
-});
-
-// works on class components as well, using a decorator
-@observer
-class ComponentExample extends Component {
-    render() {
-        return <div onClick={updateCounter}>{model.counter}</div>;
-    }
-}
+const Example = observer(() => <div onClick={inc}>{model.counter}</div>);
 
 render(<Example />, document.body);
 ```
 
-### React
-
-There's also a react `observer` function that automatically rerenders a component
-whenever a value used during rendering changes. 
-
 ```js
-import { observable, observer } from 'iaktta.react';
-import { render, Component } from 'react';
+import { observer } from 'iaktta.preact'; // or iaktta.react
+import { render, h, Component } from 'preact';
 
-const model = observable({ counter: 0 });
-const updateCounter = () => model.counter ++;
-
-const Example = observer(() => {
-    <div onClick={updateCounter}>{model.counter}</div>
-});
-
-// works on class components as well, using a decorator
+// Also works with class Components
 @observer
-class ComponentExample extends Component {
-    render() {
-        return <div onClick={updateCounter}>{model.counter}</div>;
-    }
+class Example extends Component {
+  render() { return <div onClick={inc}>{model.counter}</div>; }
 }
-
-render(<Example />, document.body);
 ```
