@@ -51,7 +51,6 @@ export function notifyObservers(target: object, key: string) {
   const observations = proxyObjectObservers.get(target);
   if (observations !== undefined && observations[key] !== undefined) {
     const values = observations[key];
-    observations[key] = new Set();
     for (const observer of values) {
       observer();
     }
