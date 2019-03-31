@@ -1,8 +1,9 @@
 type Observer = () => void;
+type PropertyObservers = { [key: string]: Set<Observer> };
 
 export let activeObserver: Observer | null = null;
-const proxyObjectObservers = new WeakMap<any, { [key: string]: Set<Observer> }>();
-const observerObservations = new WeakMap<Observer, Set<Set<Observer>>>();
+export const proxyObjectObservers = new WeakMap<any, PropertyObservers>();
+export const observerObservations = new WeakMap<Observer, Set<Set<Observer>>>();
 
 export function observe<T>(observer: Observer, run: () => T): T {
   const previousObserver = activeObserver;

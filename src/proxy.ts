@@ -3,8 +3,8 @@ import { getMutationHelper } from './mutation-triggers';
 
 const hasOwnProperty = (o: any, key: string) => Object.prototype.hasOwnProperty.call(o, key);
 
-const observableProperties = new WeakMap();
-const observableCache = new WeakMap<any, any>();
+export const observableProperties = new WeakMap();
+export const observableCache = new WeakMap<any, any>();
 
 export const observable: IObservable = ((Class: any, key: any, desc: any) => {
   if (key !== undefined) {
