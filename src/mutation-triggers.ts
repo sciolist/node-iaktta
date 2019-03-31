@@ -9,17 +9,16 @@ export function getMutationHelper(target: object, value: any) {
   }
   if (target instanceof Map || target instanceof Set) {
     const key = 'size';
-    addObservation(target, key);
     return mutatingFunction(target, value, key);
   }
   if (target instanceof Array) {
     const key = 'length';
-    addObservation(target, key);
     return mutatingFunction(target, value, key);
   }
 }
 
 function mutatingFunction(target: object, func: Function, mutatingKey: string) {
+  addObservation(target, mutatingKey);
   return function() {
     const before = target[mutatingKey];
     try {
