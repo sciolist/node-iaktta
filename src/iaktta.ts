@@ -21,6 +21,7 @@ function observer<RV extends { name?: string; prototype: any }>(component: RV): 
   }
   prototype.render = function () {
     const observer = this[observerSym] || (this[observerSym] = createObserver(this.setState.bind(this)));
+    clearObserver(observer);
     if (!this.base || this.base.isConnected) {
       return withObserver(observer, render.bind(this, arguments));
     }
