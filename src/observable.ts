@@ -13,7 +13,7 @@ const observableSym = Symbol();
 function observableObject<T extends object>(object: T): T {
   let proxy = object[observableSym];
   if (!proxy) {
-    proxy = object[proxy] = new Proxy(object, { get: getProxyValue, set: setProxyValue });
+    proxy = object[observableSym] = new Proxy(object, { get: getProxyValue, set: setProxyValue });
   }
   return proxy;
 }
