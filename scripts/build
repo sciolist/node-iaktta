@@ -2,4 +2,4 @@
 set -ue
 rm -rf dist/**/*.js
 rm -rf dist/**/*.d.ts
-rollup -c rollup.config.js
+NODE_ENV=production rollup -c rollup.config.js
