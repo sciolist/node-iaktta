@@ -1,5 +1,5 @@
 const { render, Component, h } = require('preact');
-const { observable, observer } = require('iaktta.preact');
+const { observable, observer } = require('iaktta');
 
 const model = observable({
   counter: 0
