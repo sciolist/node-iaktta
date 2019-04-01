@@ -1,5 +1,4 @@
 import { addObservation, clearObserver, notifyObservers, withObserver, createObserver } from "./observer";
-import { createDecoratable } from "./util";
 
 export const computed: IComputed = ((Class, key, desc) => {
   if (key) {

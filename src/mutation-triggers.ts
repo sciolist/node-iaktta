@@ -1,5 +1,5 @@
 import { notifyObservers, addObservation } from './observer';
-import { getListenersForKey } from './observable';
+import { getListenersForKey } from './utils';
 
 // Some built-in JS objects mutate themselves in ways we cannot track.
 // So we need to hack in observations on these.

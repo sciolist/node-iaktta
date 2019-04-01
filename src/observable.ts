@@ -1,13 +1,6 @@
 import { addObservation, notifyObservers } from './observer';
 import { getMutationHelper } from './mutation-triggers';
-
-export function getListenersForKey(target: object, key: string | symbol, createIfNeeded?: boolean) {
-  let result = target[listenerSym][key];
-  if (!result && createIfNeeded) {
-    result = target[listenerSym][key] = new Set();
-  }
-  return result;
-}
+import { getListenersForKey } from './utils';
 
 export const observable: IObservable = ((Class: any, key: any, desc: any) => {
   if (key) {
@@ -16,13 +9,11 @@ export const observable: IObservable = ((Class: any, key: any, desc: any) => {
   return observableObject(Class);
 }) as any;
 
-const listenerSym = Symbol();
 const observableSym = Symbol();
 function observableObject<T extends object>(object: T): T {
   let proxy = object[observableSym];
   if (!proxy) {
     proxy = object[proxy] = new Proxy(object, { get: getProxyValue, set: setProxyValue });
-    proxy[listenerSym] = {};
   }
   return proxy;
 }
@@ -66,7 +57,7 @@ function setProxyValue(target: object, key: string | symbol, value: any) {
   target[key] = value;
   const listeners = getListenersForKey(target, key);
   if (listeners && value !== before) {
-    notifyObservers(target[listenerSym][key]);
+    notifyObservers(listeners);
   }
   return true;
 }

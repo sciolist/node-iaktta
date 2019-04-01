@@ -1,7 +1,6 @@
 {
     "name": "iaktta.preact",
     "version": "0.0.14",
-    "main": "iaktta.js",
     "peerDependencies": {
       "preact": ">= 8"
     },
@@ -10,6 +9,12 @@
     "repository": {
       "url": "https://github.com/sciolist/node-iaktta.git"
     },
-    "description": "state management"
+    "description": "state management",
+    "main": "iaktta.js",
+    "minified:main": "iaktta.min.js",
+    "module": "iaktta.mjs",
+    "types": "iaktta.d.ts",
+    "typings": "./iaktta.d.ts",
+    "browser": "iaktta.mjs"
   }
   
