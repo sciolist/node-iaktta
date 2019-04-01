@@ -1,61 +1,45 @@
-type Observer = () => void;
-type PropertyObservers = { [key: string]: Set<Observer> };
+type Observer = { run: () => void; on: Set<Set<Observer>> };
 
-export let activeObserver: Observer | null = null;
-export const proxyObjectObservers = new WeakMap<any, PropertyObservers>();
-export const observerObservations = new WeakMap<Observer, Set<Set<Observer>>>();
+export let globalObserver: Observer | null = null;
+
+export function createObserver(run: () => void): Observer {
+  return { run, on: new Set() };
+}
 
 export function withObserver<T>(observer: Observer, run: () => T): T {
-  const previousObserver = activeObserver;
-  activeObserver = observer;
+  const previousObserver = globalObserver;
+  globalObserver = observer;
   try {
     return run();
   } finally {
-    activeObserver = previousObserver;
+    globalObserver = previousObserver;
   }
 }
 
 export function clearObserver(observer: Observer) {
-  const observations = observerObservations.get(observer);
-  observerObservations.delete(observer);
-  for (let observation of observations || []) {
-    observation.delete(observer);
+  if (observer) {
+    const set = Array.from(observer.on);
+    observer.on.clear();
+    for (let observation of set) {
+      observation.delete(observer);
+    }
   }
 }
 
-export function addObservation(target: object, key: string, observer?: Observer | null | undefined) {
+export function addObservation(listeners: Set<Observer>, observer?: Observer | null | undefined) {
   if (observer === undefined) {
-    observer = activeObserver;
+    observer = globalObserver;
   }
   if (observer) {
-    let targetObservations = proxyObjectObservers.get(target);
-    if (!targetObservations) {
-      targetObservations = {};
-      proxyObjectObservers.set(target, targetObservations);
-    }
-    let keyObservations = targetObservations[key];
-    if (!keyObservations) {
-      keyObservations = new Set();
-      targetObservations[key] = keyObservations;
-    }
-    let observe = observerObservations.get(observer);
-    if (!observe) {
-      observe = new Set();
-      observerObservations.set(observer, observe);
-    }
-    keyObservations.add(observer);
-    observe.add(keyObservations);
+    observer.on.add(listeners);
+    listeners.add(observer);
   }
 }
 
-export function notifyObservers(target: object, key: any) {
-  const observations = proxyObjectObservers.get(target);
-  if (observations && observations[key]) {
-    const values = Array.from(observations[key]);
-    for (const observer of values) {
-      if (activeObserver !== observer) {
-        observer();
-      }
+export function notifyObservers(observers: Set<Observer>) {
+  for (const observer of Array.from(observers)) {
+    if (globalObserver !== observer) {
+      observer.run();
     }
   }
 }

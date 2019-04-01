@@ -1,4 +1,5 @@
 import { notifyObservers, addObservation } from './observer';
+import { getListenersForKey } from './proxy';
 
 // Some built-in JS objects mutate themselves in ways we cannot track.
 // So we need to hack in observations on these.
@@ -18,11 +19,12 @@ function getMutationHelperInner(target: object, value: any, mutatingKey: string)
       try {
         return value.apply(target, arguments);
       } finally {
-        if (target[mutatingKey] !== before) {
-          notifyObservers(target, mutatingKey);
+        const listeners = getListenersForKey(target, mutatingKey);
+        if (listeners && target[mutatingKey] !== before) {
+          notifyObservers(listeners);
         }
       }
     };
   }
-  addObservation(target, mutatingKey);
+  addObservation(getListenersForKey(target, mutatingKey, true));
 }

@@ -1,26 +1,34 @@
 import { addObservation, notifyObservers } from './observer';
 import { getMutationHelper } from './mutation-triggers';
 
-export const observableCache = new WeakMap<any, any>();
+export function getListenersForKey(target: object, key: string | symbol, createIfNeeded?: boolean) {
+  let result = target[listenerSym][key];
+  if (!result && createIfNeeded) {
+    result = target[listenerSym][key] = new Set();
+  }
+  return result;
+}
 
 export const observable: IObservable = ((Class: any, key: any, desc: any) => {
   if (key) {
-    return observableProperty(Class, key, desc);
+    return observableDecorator(Class, key, desc);
   }
   return observableObject(Class);
 }) as any;
 
+const listenerSym = Symbol();
+const observableSym = Symbol();
 function observableObject<T extends object>(object: T): T {
-  let proxy = observableCache.get(object);
+  let proxy = object[observableSym];
   if (!proxy) {
-    proxy = new Proxy(object, { get: getProxyValue, set: setProxyValue });
-    observableCache.set(object, proxy);
+    proxy = object[proxy] = new Proxy(object, { get: getProxyValue, set: setProxyValue });
+    proxy[listenerSym] = {};
   }
   return proxy;
 }
 
 const observablePropsSym = Symbol();
-function observableProperty(Class, key, desc) {
+function observableDecorator(Class, key, desc) {
   const getObservable = (inst: any) => inst[observablePropsSym] || (inst[observablePropsSym] = observable({}));
   return {
     get() {
@@ -44,7 +52,8 @@ function getProxyValue(target: object, key: string | symbol) {
     return mutationHelper;
   }
   if (typeof key != 'symbol') {
-    addObservation(target, key);
+    const listeners = getListenersForKey(target, key, true);
+    addObservation(listeners);
     if (value instanceof Object) {
       return observableObject(value);
     }
@@ -55,8 +64,9 @@ function getProxyValue(target: object, key: string | symbol) {
 function setProxyValue(target: object, key: string | symbol, value: any) {
   const before = target[key];
   target[key] = value;
-  if (before !== value) {
-    notifyObservers(target, key);
+  const listeners = getListenersForKey(target, key);
+  if (listeners && value !== before) {
+    notifyObservers(target[listenerSym][key]);
   }
   return true;
 }

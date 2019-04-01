@@ -1,15 +1,16 @@
 import t from 'tap';
 import sinon from 'sinon';
 import { computed } from '../../src/computed';
-import { addObservation, activeObserver, notifyObservers } from '../../src/observer';
+import { addObservation, globalObserver, notifyObservers } from '../../src/observer';
 
 const o = {};
+const listeners = new Set();
 const computation = sinon.spy(() => {
-  addObservation(o, "test", activeObserver);
+  addObservation(listeners, globalObserver);
 });
 const computedFn = computed(computation);
 computedFn();
-notifyObservers(o, "test");
+notifyObservers(listeners);
 
 // the computation should not rerun until it's used
 t.is(computation.callCount, 1);

@@ -1,4 +1,5 @@
-import { addObservation, clearObserver, notifyObservers, withObserver } from "./observer";
+import { addObservation, clearObserver, notifyObservers, withObserver, createObserver } from "./observer";
+import { createDecoratable } from "./util";
 
 export const computed: IComputed = ((Class, key, desc) => {
   if (key) {
@@ -8,29 +9,34 @@ export const computed: IComputed = ((Class, key, desc) => {
 }) as any;
 
 function computedDecorator(Class, key, desc) {
+  const sym = Symbol();
   return {
-    initializer() { return computedFunction(desc.get); }
+    get() {
+      if (!this[sym]) {
+        this[sym] = computedFunction(desc.get);
+      }
+      return this[sym]();
+    }
   };
 }
 
 function computedFunction<T>(inner: () => T): () => T {
   let value = undefined as any;
   let executed = 0;
-  const clear = () => {
+  const listeners = new Set();
+  const clear = createObserver(() => {
     clearObserver(clear);
-    notifyObservers(inner, '');
+    notifyObservers(listeners);
     executed = 0;
-  }
+  });
   return function memoizer() {
-    addObservation(inner, '');
+    addObservation(listeners);
     if (executed) {
       return value;
     }
     return withObserver(clear, () => {
-      if (!executed) {
-        executed = 1;
-        value = inner.call(this);
-      }
+      value = inner.call(this);
+      executed = 1;
       return value;
     });
   }

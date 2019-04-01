@@ -1,10 +1,11 @@
 import t from 'tap';
 import sinon from 'sinon';
 import { computed } from '../../src/computed';
-import { addObservation, activeObserver } from '../../src/observer';
+import { addObservation, globalObserver } from '../../src/observer';
 
+const listeners = new Set();
 const computation = sinon.spy(() => {
-  addObservation({}, "test", activeObserver);
+  addObservation(listeners, globalObserver);
 });
 const computedFn = computed(computation);
 computedFn();
