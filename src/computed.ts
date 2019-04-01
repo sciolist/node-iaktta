@@ -1,6 +1,4 @@
-import { addObservation, notifyObservers, withObserver } from "./observer";
-
-import { clearObserver } from "./iaktta";
+import { addObservation, clearObserver, notifyObservers, withObserver } from "./observer";
 
 export const computed: IComputed = ((Class, key, desc) => {
   if (key) {
