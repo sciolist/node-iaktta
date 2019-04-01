@@ -6,12 +6,9 @@ echo ""
 MINIFY=1 npm run build >/dev/null 2>/dev/null
 cjs_min_size=$(cat ./dist/preact/iaktta.js | wc -c)
 cjs_gz_size=$(cat ./dist/preact/iaktta.js | gzip | wc -c)
-
 npm run build >/dev/null 2>/dev/null
-cjs_full_size=$(cat ./dist/preact/iaktta.js | wc -c)
 
 echo "cjs preact build:"
-echo "$cjs_full_size bytes unminified"
 echo "$cjs_min_size bytes minifed"
 echo "$cjs_gz_size bytes gzipped"
 echo ""
