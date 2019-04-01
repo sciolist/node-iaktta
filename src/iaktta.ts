@@ -1,5 +1,5 @@
 export { clearObserver, withObserver };
-export { observable } from './proxy';
+export { observable } from './observable';
 export { computed } from './computed';
 export { observer };
 
