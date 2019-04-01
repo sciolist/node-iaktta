@@ -18,10 +18,8 @@ export function withObserver<T>(observer: Observer, run: () => T): T {
 export function clearObserver(observer: Observer) {
   const observations = observerObservations.get(observer);
   observerObservations.delete(observer);
-  if (observations !== undefined) {
-    for (let observation of observations) {
-      observation.delete(observer);
-    }
+  for (let observation of observations || []) {
+    observation.delete(observer);
   }
 }
 
@@ -29,31 +27,30 @@ export function addObservation(target: object, key: string, observer?: Observer 
   if (observer === undefined) {
     observer = activeObserver;
   }
-  if (observer === null) {
-    return;
+  if (observer) {
+    let targetObservations = proxyObjectObservers.get(target);
+    if (!targetObservations) {
+      targetObservations = {};
+      proxyObjectObservers.set(target, targetObservations);
+    }
+    let keyObservations = targetObservations[key];
+    if (!keyObservations) {
+      keyObservations = new Set();
+      targetObservations[key] = keyObservations;
+    }
+    let observe = observerObservations.get(observer);
+    if (!observe) {
+      observe = new Set();
+      observerObservations.set(observer, observe);
+    }
+    keyObservations.add(observer);
+    observe.add(keyObservations);
   }
-  let targetObservations = proxyObjectObservers.get(target);
-  if (targetObservations === undefined) {
-    targetObservations = {};
-    proxyObjectObservers.set(target, targetObservations);
-  }
-  let keyObservations = targetObservations[key];
-  if (keyObservations === undefined) {
-    keyObservations = new Set();
-    targetObservations[key] = keyObservations;
-  }
-  let observe = observerObservations.get(observer);
-  if (observe === undefined) {
-    observe = new Set();
-    observerObservations.set(observer, observe);
-  }
-  keyObservations.add(observer);
-  observe.add(keyObservations);
 }
 
-export function notifyObservers(target: object, key: string) {
+export function notifyObservers(target: object, key: any) {
   const observations = proxyObjectObservers.get(target);
-  if (observations !== undefined && observations[key] !== undefined) {
+  if (observations && observations[key]) {
     const values = Array.from(observations[key]);
     for (const observer of values) {
       if (activeObserver !== observer) {

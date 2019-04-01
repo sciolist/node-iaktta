@@ -1,6 +1,7 @@
 export { clearObserver, withObserver };
 export { observable } from './proxy';
 export { computed } from './computed';
+export { observer };
 
 import { clearObserver, withObserver } from './observer';
 import { Component } from 'preact';

@@ -3,7 +3,7 @@ import { addObservation, notifyObservers, withObserver } from "./observer";
 import { clearObserver } from "./iaktta";
 
 export const computed: IComputed = ((Class, key, desc) => {
-  if (key !== undefined) {
+  if (key) {
     return computedDecorator(Class, key, desc);
   }
   return computedFunction(Class);
@@ -17,20 +17,20 @@ function computedDecorator(Class, key, desc) {
 
 function computedFunction<T>(inner: () => T): () => T {
   let value = undefined as any;
-  let executed = false;
+  let executed = 0;
+  const clear = () => {
+    clearObserver(clear);
+    notifyObservers(inner, '');
+    executed = 0;
+  }
   return function memoizer() {
     addObservation(inner, '');
     if (executed) {
       return value;
     }
-    const clear = () => {
-      clearObserver(clear);
-      notifyObservers(inner, '');
-      executed = false;
-    }
     return withObserver(clear, () => {
       if (!executed) {
-        executed = true;
+        executed = 1;
         value = inner.call(this);
       }
       return value;
