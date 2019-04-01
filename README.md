@@ -35,13 +35,13 @@ render(<Counter />, document.body);
 ## Size
 
 ```
-$ sh scripts/get-size
-  "version": "0.0.10",
+§ sh scripts/get-size 
+  "version": "0.0.13",
 
 cjs preact build:
-5541 bytes unminified
-1973 bytes minifed
- 884 bytes gzipped
+6060 bytes unminified
+1999 bytes minifed
+ 936 bytes gzipped
 ``` 
 
 ## Public functions
