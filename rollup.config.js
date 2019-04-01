@@ -37,6 +37,12 @@ export function createConfiguration(name) {
       external: [name]
     },
     {
+      output: { file: `./dist/${name}/iaktta.min.mjs`, format: 'es' },
+      input: `./src/iaktta.ts`,
+      plugins: [...buildPlugins, minifier],
+      external: [name]
+    },
+    {
       output: { file: `./dist/${name}/iaktta.mjs`, format: 'es' },
       input: `./src/iaktta.ts`,
       plugins: buildPlugins,

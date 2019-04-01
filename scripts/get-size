@@ -3,11 +3,15 @@ set -ue
 cat package.json | grep "version"
 echo ""
 
+function size() {
+    echo $* | awk "{ printf \"%.2f\", $1 / $2 }"
+}
+
 npm run build >/dev/null 2>/dev/null
-bundle_min_size=$(cat ./dist/preact/iaktta.mjs | wc -c)
-bundle_gz_size=$(cat ./dist/preact/iaktta.mjs | gzip | wc -c)
+bundle_min_size=$(cat ./dist/preact/iaktta.min.mjs | wc -c)
+bundle_gz_size=$(cat ./dist/preact/iaktta.min.mjs | gzip | wc -c)
 
 echo "preact build:"
-echo "$bundle_min_size bytes minifed"
-echo "$bundle_gz_size bytes gzipped"
+echo "$(size "$bundle_min_size" 1024) kb minified"
+echo "$(size "$bundle_gz_size" 1024) kb gzipped"
 echo ""
