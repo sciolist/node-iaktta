@@ -1,17 +1,18 @@
-export { observe, clearObserver, observable, observer };
+export { clearObserver, withObserver };
+export { observable } from './proxy';
+export { computed } from './computed';
 
-import { Component } from 'react';
-import { clearObserver, observe } from './observer';
-import { observable } from './proxy';
+import { clearObserver, withObserver } from './observer';
+import { Component } from 'preact';
 
-const observerSym = Symbol('iaktta');
+const observerSym = Symbol();
 
-// binds a react component class to any observables it uses during rendering
+// binds a preact component class to any observables it uses during rendering
 function observer<RV extends { name?: string; prototype: any }>(component: RV): RV {
   // wrap single file components
   const sfc = !(component.prototype instanceof Component);
   let cls = (sfc ? Component : component) as any;
-  return class ObserverWrapper extends (cls as any) {
+  class ObserverWrapper extends cls {
     displayName = (cls.displayName || cls.name);
     [observerSym] = () => this.setState();
     componentWillUnmount() {
@@ -23,7 +24,8 @@ function observer<RV extends { name?: string; prototype: any }>(component: RV): 
     render() {
       const oldRender = sfc ? component : super.render;
       clearObserver(this[observerSym]);
-      return observe(this[observerSym], oldRender.bind(this, arguments));
+      return withObserver(this[observerSym], oldRender.bind(this, arguments));
     }
-  } as any;
+  }
+  return Object.assign(ObserverWrapper, cls) as any;
 }

@@ -1,9 +1,8 @@
-import { addObservation, notifyObservers, activeObserver } from './observer';
+import { addObservation, notifyObservers } from './observer';
 import { getMutationHelper } from './mutation-triggers';
 
-const hasOwnProperty = (o: any, key: string) => Object.prototype.hasOwnProperty.call(o, key);
+const isObservable = (key: string | symbol) : key is string => (typeof key !== 'symbol' && !({}).hasOwnProperty(key))
 
-export const observableProperties = new WeakMap();
 export const observableCache = new WeakMap<any, any>();
 
 export const observable: IObservable = ((Class: any, key: any, desc: any) => {
@@ -21,8 +20,9 @@ function observableObject<T extends object>(object: T): T {
   return observableCache.get(object);
 }
 
+const observablePropsSym = Symbol();
 function observableProperty(Class, key, desc) {
-  const getObservable = t => observableProperties.get(t) || observableProperties.set(t, observableObject({})).get(t);
+  const getObservable = (inst: any) => inst[observablePropsSym] || (inst[observablePropsSym] = observable({}));
   return {
     get() {
       const o = getObservable(this);
@@ -31,7 +31,7 @@ function observableProperty(Class, key, desc) {
       }
       return o[key];
     },
-    set(value) {
+    set(value: any) {
       return (getObservable(this)[key] = value);
     }
   };
@@ -43,16 +43,13 @@ function getProxyValue(target: object, key: string | symbol) {
   if (mutationHelper !== undefined) {
     return mutationHelper;
   }
-  if (typeof key === 'symbol' || hasOwnProperty(Object.prototype, key)) {
-    return value;
+  if (isObservable(key)) {
+    addObservation(target, key);
+    if (value instanceof Object) {
+      return observableObject(value);
+    }
   }
-  if (activeObserver !== null) {
-    addObservation(activeObserver, target, key);
-  }
-  if (!(value instanceof Object)) {
-    return value;
-  }
-  return observableObject(value);
+  return value;
 }
 
 function setProxyValue(target: object, key: string | symbol, value: any) {
@@ -61,7 +58,7 @@ function setProxyValue(target: object, key: string | symbol, value: any) {
   if (before === value) {
     return true;
   }
-  if (typeof key !== 'symbol' && !hasOwnProperty(Object.prototype, key)) {
+  if (isObservable(key)) {
     notifyObservers(target, key);
   }
   return true;

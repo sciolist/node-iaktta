@@ -5,7 +5,7 @@ export let activeObserver: Observer | null = null;
 export const proxyObjectObservers = new WeakMap<any, PropertyObservers>();
 export const observerObservations = new WeakMap<Observer, Set<Set<Observer>>>();
 
-export function observe<T>(observer: Observer, run: () => T): T {
+export function withObserver<T>(observer: Observer, run: () => T): T {
   const previousObserver = activeObserver;
   activeObserver = observer;
   try {
@@ -25,7 +25,10 @@ export function clearObserver(observer: Observer) {
   }
 }
 
-export function addObservation(observer: Observer, target: object, key: string) {
+export function addObservation(target: object, key: string, observer?: Observer | null | undefined) {
+  if (observer === undefined) {
+    observer = activeObserver;
+  }
   if (observer === null) {
     return;
   }
@@ -51,7 +54,7 @@ export function addObservation(observer: Observer, target: object, key: string) 
 export function notifyObservers(target: object, key: string) {
   const observations = proxyObjectObservers.get(target);
   if (observations !== undefined && observations[key] !== undefined) {
-    const values = observations[key];
+    const values = Array.from(observations[key]);
     for (const observer of values) {
       if (activeObserver !== observer) {
         observer();

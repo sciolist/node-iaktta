@@ -13,14 +13,16 @@ const minifier = process.env.MINIFY && terser({
 export function createConfiguration(name) {
   return [
     {
-      output: { file: `./dist/${name}/iaktta.js`, format: 'cjs' },
-      input: `./src/iaktta.${name}.ts`,
-      plugins: [ minifier, ts(), minifier ].filter(v => v),
+      output: { dir: `./dist/${name}`, format: 'cjs' },
+      input: [
+        `./src/iaktta.ts`
+      ],
+      plugins: [ minifier, ts() ].filter(v => v),
       external: [name]
     },
     {
       output: { file: `./dist/${name}/iaktta.d.ts`, format: 'es' },
-      input: `./src/iaktta.${name}.ts`,
+      input: `./src/iaktta.ts`,
       plugins: [dts()],
       external: [name]
     }
@@ -28,6 +30,5 @@ export function createConfiguration(name) {
 }
 
 export default [
-  ...createConfiguration('preact'),
-  ...createConfiguration('react')
+  ...createConfiguration('preact')
 ]

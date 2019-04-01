@@ -1,6 +1,6 @@
 {
     "name": "iaktta.preact",
-    "version": "0.0.12",
+    "version": "0.0.13",
     "main": "iaktta.js",
     "peerDependencies": {
       "preact": ">= 8"

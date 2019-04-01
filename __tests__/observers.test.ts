@@ -1,3 +1,5 @@
+import test from 'ava';
+import sinon from 'sinon';
 import {
   addObservation,
   notifyObservers,
@@ -6,47 +8,47 @@ import {
 } from "../src/observer";
 const o = {};
 
-test("can create an observer", () => {
-  const observer = jest.fn();
-  addObservation(observer, o, "test");
-  expect(observerObservations.get(observer)).toBeTruthy();
+test("can create an observer", t => {
+  const observer = sinon.spy();
+  addObservation(o, "test", observer);
+  t.truthy(observerObservations.get(observer));
 });
 
-test("can clear an observer", () => {
-  const observer = jest.fn();
-  addObservation(observer, o, "test");
-  expect(observerObservations.get(observer)).toBeTruthy();
+test("can clear an observer", t => {
+  const observer = sinon.spy();
+  addObservation(o, "test", observer);
+  t.truthy(observerObservations.get(observer));
   clearObserver(observer);
-  expect(observerObservations.get(observer)).toBeUndefined();
+  t.falsy(observerObservations.get(observer));
 });
 
-test("can trigger an observer", () => {
-  const observer = jest.fn();
-  addObservation(observer, o, "test");
+test("can trigger an observer", t => {
+  const observer = sinon.spy();
+  addObservation(o, "test", observer);
   notifyObservers(o, "test");
-  expect(observer).toBeCalledTimes(1);
+  t.is(observer.callCount, 1);
 });
 
-test("does not trigger on unwatched observable", () => {
-  const observer = jest.fn();
+test("does not trigger on unwatched observable", t => {
+  const observer = sinon.spy();
   notifyObservers(o, "test");
-  expect(observer).toBeCalledTimes(0);
+  t.is(observer.callCount, 0);
 });
 
-test("can trigger an observer multiple times", () => {
-  const observer = jest.fn();
-  addObservation(observer, o, "test");
+test("can trigger an observer multiple times", t => {
+  const observer = sinon.spy();
+  addObservation(o, "test", observer);
   notifyObservers(o, "test");
-  expect(observer).toBeCalledTimes(1);
+  t.is(observer.callCount, 1);
   notifyObservers(o, "test");
-  expect(observer).toBeCalledTimes(2);
+  t.is(observer.callCount, 2);
 });
 
-test("cleared observer is not triggered", () => {
-  const observer = jest.fn();
-  addObservation(observer, o, "test");
+test("cleared observer is not triggered", t => {
+  const observer = sinon.spy();
+  addObservation(o, "test", observer);
   notifyObservers(o, "test");
   clearObserver(observer);
   notifyObservers(o, "test");
-  expect(observer).toBeCalledTimes(1);
+  t.is(observer.callCount, 1);
 });
