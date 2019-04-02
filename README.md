@@ -14,7 +14,7 @@ npm install iaktta.preact
 
 ```js
 import { observable, observer } from 'iaktta.preact';
-import { h, component } from 'preact';
+import { h } from 'preact';
 
 const model = observable({ counter: 0 });
 const increment = () => model.counter ++;
