@@ -20,7 +20,7 @@ export function observer<RV extends { name?: string; prototype: any }>(component
     if (!this.base || this.base.isConnected) {
       const prev = activate(observer);
       try {
-        return render.bind(this, arguments);
+        return render.apply(this, arguments);
       } finally {
         activate(prev);
       }
