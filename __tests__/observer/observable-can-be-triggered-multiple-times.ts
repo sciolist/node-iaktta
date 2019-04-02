@@ -3,7 +3,7 @@ import sinon from 'sinon';
 import { addObservation, notifyObservers, createObserver } from '../../src/observer';
 
 const observerFn = sinon.spy();
-const observer = createObserver(observerFn);
+const observer = createObserver({ run: observerFn });
 const listeners = new Set();
 addObservation(listeners, observer);
 notifyObservers(listeners);

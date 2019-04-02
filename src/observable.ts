@@ -1,6 +1,6 @@
-import { addObservation, notifyObservers } from './observer';
 import { getMutationHelper } from './mutation-triggers';
 import { getListenersForKey } from './utils';
+import { active } from './observer';
 
 export const observable: IObservable = ((Class: any, key: any, desc: any) => {
   if (key) {
@@ -30,8 +30,7 @@ function observableDecorator(Class, key, desc) {
       return o[key];
     },
     set(value: any) {
-      const o = getObservable(this);
-      o[key] = value;
+      (getObservable(this))[key] = value;
     }
   };
 }
@@ -44,7 +43,7 @@ function getProxyValue(target: object, key: string | symbol) {
   }
   if (typeof key != 'symbol') {
     const listeners = getListenersForKey(target, key, true);
-    addObservation(listeners);
+    active.add(listeners);
     if (value instanceof Object) {
       return observableObject(value);
     }
@@ -57,7 +56,7 @@ function setProxyValue(target: object, key: string | symbol, value: any) {
   target[key] = value;
   const listeners = getListenersForKey(target, key);
   if (listeners && value !== before) {
-    notifyObservers(listeners);
+    active.notify(listeners);
   }
   return true;
 }

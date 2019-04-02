@@ -25,27 +25,27 @@ const buildPlugins = [
 export function createConfiguration(name) {
   return [
     {
-      output: { file: `./dist/${name}/iaktta.js`, format: 'cjs' },
+      output: { dir: `./dist/${name}`, entryFileNames: '[name].js', format: 'cjs' },
       input: `./src/iaktta.ts`,
       plugins: buildPlugins,
       external: [name]
     },
     {
-      output: { file: `./dist/${name}/iaktta.min.js`, format: 'cjs' },
+      output: { dir: `./dist/${name}`, entryFileNames: '[name].min.js', format: 'cjs' },
       input: `./src/iaktta.ts`,
       plugins: [...buildPlugins, minifier],
       external: [name]
     },
     {
-      output: { file: `./dist/${name}/iaktta.min.mjs`, format: 'es' },
-      input: `./src/iaktta.ts`,
-      plugins: [...buildPlugins, minifier],
-      external: [name]
-    },
-    {
-      output: { file: `./dist/${name}/iaktta.mjs`, format: 'es' },
+      output: { dir: `./dist/${name}`, entryFileNames: '[name].mjs', format: 'es' },
       input: `./src/iaktta.ts`,
       plugins: buildPlugins,
+      external: [name]
+    },
+    {
+      output: { dir: `./dist/${name}`, entryFileNames: '[name].min.mjs', format: 'es' },
+      input: './src/iaktta.ts',
+      plugins: [...buildPlugins, minifier],
       external: [name]
     },
     {

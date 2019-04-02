@@ -13,18 +13,18 @@ export function getMutationHelper(target: object, value: any) {
 }
 
 function getMutationHelperInner(target: object, value: any, mutatingKey: string) {
-  if (value instanceof Function) {
-    return function() {
+  const listeners = getListenersForKey(target, mutatingKey);
+  if (typeof value == 'function') {
+    return () => {
       const before = target[mutatingKey];
       try {
         return value.apply(target, arguments);
       } finally {
-        const listeners = getListenersForKey(target, mutatingKey);
-        if (listeners && target[mutatingKey] !== before) {
+        if (target[mutatingKey] !== before) {
           notifyObservers(listeners);
         }
       }
     };
   }
-  addObservation(getListenersForKey(target, mutatingKey, true));
+  addObservation(listeners);
 }

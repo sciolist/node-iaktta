@@ -1,22 +1,31 @@
-type Observer = { run: () => void; on: Set<Set<Observer>> };
+export type Observer =  {
+  run: () => void;
+  on: Set<Set<Observer>>;
+  notify(observers: Set<Observer>): void;
+  add(observers: Set<Observer>, target?: Observer): void;
+};
 
-export let globalObserver: Observer | null = null;
+export let active: Observer = createObserver();
 
-export function createObserver(run: () => void): Observer {
-  return { run, on: new Set() };
-}
-
-export function withObserver<T>(observer: Observer, run: () => T): T {
-  const previousObserver = globalObserver;
-  globalObserver = observer;
+export function activate(observer: Observer) {
   try {
-    return run();
+    return active;
   } finally {
-    globalObserver = previousObserver;
+    active = observer;
   }
 }
 
-export function clearObserver(observer: Observer) {
+export function createObserver(config?: Partial<Observer>): Observer {
+  return {
+    on: new Set(),
+    notify: notifyObservers,
+    add: addObservation,
+    run: () => void 0,
+    ...config
+  };
+}
+
+export function clearObserver(observer: Observer | null | undefined) {
   if (observer) {
     const set = Array.from(observer.on);
     observer.on.clear();
@@ -28,7 +37,7 @@ export function clearObserver(observer: Observer) {
 
 export function addObservation(listeners: Set<Observer>, observer?: Observer | null | undefined) {
   if (observer === undefined) {
-    observer = globalObserver;
+    observer = active;
   }
   if (observer) {
     observer.on.add(listeners);
@@ -38,7 +47,7 @@ export function addObservation(listeners: Set<Observer>, observer?: Observer | n
 
 export function notifyObservers(observers: Set<Observer>) {
   for (const observer of Array.from(observers)) {
-    if (globalObserver !== observer) {
+    if (active !== observer) {
       observer.run();
     }
   }
