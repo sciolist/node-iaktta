@@ -1,7 +1,7 @@
 {
   "name": "iaktta",
   "private": true,
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "iaktta.js",
   "scripts": {
     "build": "bash scripts/build",

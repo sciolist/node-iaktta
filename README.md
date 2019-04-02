@@ -1,13 +1,12 @@
 # iaktta
 
-Basic state container that I use for some lightweight projects.
+A small observable state container.
 
 **I would recommend you stick to the more popular state management libraries.**
 
 ## Installing
 
 ```bash
-# install preact version
 npm install iaktta.preact
 ```
 
@@ -36,11 +35,11 @@ render(<Counter />, document.body);
 
 ```
 § sh scripts/get-size 
-  "version": "0.0.15",
+  "version": "0.0.18",
 
 preact build:
-1.89 kb minified
-0.88 kb gzipped
+2.03 kb minified
+0.92 kb gzipped
 ``` 
 
 ## Public functions
