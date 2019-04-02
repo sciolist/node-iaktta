@@ -13,9 +13,9 @@ export function getMutationHelper(target: object, value: any) {
 }
 
 function getMutationHelperInner(target: object, value: any, mutatingKey: string) {
-  const listeners = getListenersForKey(target, mutatingKey);
+  const listeners = getListenersForKey(target, mutatingKey, true);
   if (typeof value == 'function') {
-    return () => {
+    return function () {
       const before = target[mutatingKey];
       try {
         return value.apply(target, arguments);
