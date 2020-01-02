@@ -14,7 +14,7 @@ npm install iaktta.preact
 
 ```js
 import { observable, useObserver } from 'iaktta.preact';
-import { h } from 'preact';
+import { h, render } from 'preact';
 
 const model = observable({ counter: 0 });
 const increment = () => model.counter ++;
@@ -63,18 +63,18 @@ class Model {
 }
 ```
 
-### observer
+### useObserver
 
-`observer` will automatically rerender a component when an observable changes.
+`useObserver` is a preact hook that runs a function, and triggers a re-render whenever any observable used by the function is modified.
 
 ```js
 import { observable, useObserver } from 'iaktta.preact';
-import { render, h, Component } from 'preact';
+import { render, h } from 'preact';
 
 const model = observable({ counter: 0 });
 const inc = () => model.counter ++;
 
-const Example = () => useObserver(() => <div onClick={inc}>{model.counter}</div>);
+const Example = () => useObserver(() => <div onClick={inc}>The count is {model.counter}</div>);
 
 render(<Example />, document.body);
 ```
