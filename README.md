@@ -1,6 +1,6 @@
 # iaktta
 
-A small observable state container.
+A small observable state container for preact/hooks.
 
 **I would recommend you stick to the more popular state management libraries.**
 
@@ -35,7 +35,7 @@ render(<Counter />, document.body);
 
 ```
 § sh scripts/get-size 
-  "version": "0.1.1",
+  "version": "0.1.2",
 
 preact build:
 1.97 kb minified
