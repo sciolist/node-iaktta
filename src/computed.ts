@@ -1,4 +1,4 @@
-import { clearObserver, createObserver, activate, active } from "./observer";
+import { createObserver, activate, active, Observer } from "./observer";
 
 export const computed: IComputed = ((Class, key, desc) => {
   if (key) {
@@ -22,17 +22,17 @@ function computedDecorator(Class, key, desc) {
 function computedFunction<T>(inner: () => T): () => T {
   let value: any;
   let executed: any;
-  const listeners = new Set();
+  const listeners: Set<Observer> = new Set();
+  const computedObserver = createObserver({ run });
   function run () {
-    clearObserver(clear);
+    computedObserver.clear();
     active.notify(listeners);
     executed = 0;
   }
-  const clear = createObserver({ run });
   return function memoizer() {
     active.add(listeners);
     if (!executed) {
-      const prev = activate(clear);
+      const prev = activate(computedObserver);
       try {
         value = inner.call(this);
       } finally {

@@ -8,8 +8,8 @@ function size() {
 }
 
 npm run build >/dev/null 2>/dev/null
-bundle_min_size=$(cat ./dist/preact/iaktta.min.mjs | wc -c)
-bundle_gz_size=$(cat ./dist/preact/iaktta.min.mjs | gzip | wc -c)
+bundle_min_size=$(cat ./dist/preact/iaktta.mjs | wc -c)
+bundle_gz_size=$(cat ./dist/preact/iaktta.mjs | gzip | wc -c)
 
 echo "preact build:"
 echo "$(size "$bundle_min_size" 1024) kb minified"

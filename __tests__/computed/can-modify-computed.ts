@@ -1,9 +1,9 @@
 import t from 'tap';
 import sinon from 'sinon';
 import { computed } from '../../src/computed';
-import { addObservation, notifyObservers } from '../../src/observer';
+import { addObservation, notifyObservers, Observer } from '../../src/observer';
 
-const listeners = new Set();
+const listeners = new Set<Observer>();
 const computation = sinon.spy(() => {
   addObservation(listeners);
 });

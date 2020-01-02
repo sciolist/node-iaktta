@@ -13,14 +13,14 @@ npm install iaktta.preact
 ## Example
 
 ```js
-import { observable, observer } from 'iaktta.preact';
+import { observable, useObserver } from 'iaktta.preact';
 import { h } from 'preact';
 
 const model = observable({ counter: 0 });
 const increment = () => model.counter ++;
 const decrement = () => model.counter --;
 
-const Counter = observer(() => (
+const Counter = () => useObserver(() => (
     <div>
         <button onClick={decrement}>-</button>
         <strong>{model.counter}</strong>
@@ -35,11 +35,11 @@ render(<Counter />, document.body);
 
 ```
 § sh scripts/get-size 
-  "version": "0.0.18",
+  "version": "0.1.1",
 
 preact build:
-2.03 kb minified
-0.92 kb gzipped
+1.97 kb minified
+0.89 kb gzipped
 ``` 
 
 ## Public functions
@@ -68,26 +68,15 @@ class Model {
 `observer` will automatically rerender a component when an observable changes.
 
 ```js
-import { observable, observer } from 'iaktta.preact';
+import { observable, useObserver } from 'iaktta.preact';
 import { render, h, Component } from 'preact';
 
 const model = observable({ counter: 0 });
 const inc = () => model.counter ++;
 
-const Example = observer(() => <div onClick={inc}>{model.counter}</div>);
+const Example = () => useObserver(() => <div onClick={inc}>{model.counter}</div>);
 
 render(<Example />, document.body);
-```
-
-```js
-import { observer } from 'iaktta.preact';
-import { render, h, Component } from 'preact';
-
-// Also works with class Components
-@observer
-class Example extends Component {
-  render() { return <div onClick={inc}>{model.counter}</div>; }
-}
 ```
 
 ### computed

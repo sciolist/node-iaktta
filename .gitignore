@@ -1,6 +1,5 @@
-/dist/**/*.js
-/dist/**/*.mjs
-/dist/**/*.d.ts
+.cache
+.rts2_*
+/dist
 node_modules
 .DS_Store
-

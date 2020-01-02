@@ -1,4 +1,4 @@
-import { observable, observer } from 'iaktta';
+import { observable, useObserver  } from 'iaktta';
 import { render, Component, h } from 'preact'
 
 const model = observable({
@@ -9,7 +9,7 @@ setInterval(() => model.counter ++, 5000);
 const increment = () => model.counter ++;
 const decrement = () => model.counter --;
 
-const Test = observer(() => (
+const Test = () => useObserver(() => (
   <div>
     <button onClick={decrement}>-</button>
     <span>{model.counter}</span>

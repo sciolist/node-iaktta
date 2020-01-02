@@ -1,8 +1,8 @@
 {
     "name": "iaktta.preact",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "peerDependencies": {
-      "preact": ">= 8"
+      "preact": ">= 10"
     },
     "author": "jdp",
     "license": "BSD-2-Clause",
@@ -10,13 +10,9 @@
       "url": "https://github.com/sciolist/node-iaktta.git"
     },
     "description": "state management",
-    "types": "iaktta.d.ts",
-    "typings": "./iaktta.d.ts",
+    "types": "./src/iaktta.d.ts",
+    "typings": "./src/iaktta.d.ts",
     "main": "iaktta.js",
-    "minified:main": "iaktta.min.js",
-    "module": "iaktta.mjs",
-    "minified:module": "iaktta.min.mjs",
-    "browser": "iaktta.mjs",
-    "minified:browser": "iaktta.min.mjs"
+    "minified:main": "iaktta.min.js"
   }
   

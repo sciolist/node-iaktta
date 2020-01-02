@@ -3,11 +3,15 @@ export type Observer =  {
   on: Set<Set<Observer>>;
   notify(observers: Set<Observer>): void;
   add(observers: Set<Observer>, target?: Observer): void;
+  clear(): void;
 };
 
 export let active: Observer = createObserver();
 
 export function activate(observer: Observer) {
+  if (!observer) {
+    throw new Error('invalid activation');
+  }
   try {
     return active;
   } finally {
@@ -16,16 +20,18 @@ export function activate(observer: Observer) {
 }
 
 export function createObserver(config?: Partial<Observer>): Observer {
-  return {
-    on: new Set(),
+  const self = {
+    on: new Set<Set<Observer>>(),
+    clear: () => clearObserver(self),
     notify: notifyObservers,
     add: addObservation,
-    run: () => void 0,
+    run: () => {},
     ...config
   };
+  return self;
 }
 
-export function clearObserver(observer: Observer | null | undefined) {
+export function clearObserver(observer: Observer) {
   if (observer) {
     const set = Array.from(observer.on);
     observer.on.clear();

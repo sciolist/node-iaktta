@@ -2,4 +2,4 @@
 set -ue
 rm -rf dist/**/*.js
 rm -rf dist/**/*.d.ts
-NODE_ENV=production rollup -c rollup.config.js
+microbundle src/iaktta.ts --compress false --external preact --globals preact/hooks=preact.hooks -o dist/preact
